@@ -71,51 +71,65 @@ export default function PostForm({ post }) {
     }, [watch, slugTransform, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-            <div className="w-2/3 px-2">
-                <Input
-                    label="Title :"
-                    placeholder="Title"
-                    className="mb-4"
-                    {...register("title", { required: true })}
-                />
-                <Input
-                    label="Slug :"
-                    placeholder="Slug"
-                    className="mb-4"
-                    {...register("slug", { required: true })}
-                    onInput={(e) => {
-                        setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
-                    }}
-                />
-                <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
-            </div>
-            <div className="w-1/3 px-2">
-                <Input
-                    label="Featured Image :"
-                    type="file"
-                    className="mb-4"
-                    accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
-                />
-                {post && (
-                    <div className="w-full mb-4">
-                        <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
-                            alt={post.title}
-                            className="rounded-lg"
-                        />
-                    </div>
-                )}
-                <Select
-                    options={["active", "inactive"]}
-                    label="Status"
-                    className="mb-4"
-                    {...register("status", { required: true })}
-                />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
-                </Button>
+        <form onSubmit={handleSubmit(submit)} className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left Column */}
+                <div className="lg:col-span-2 space-y-6">
+                    <Input
+                        label="Title"
+                        placeholder="Enter post title"
+                        className="w-full"
+                        {...register("title", { required: true })}
+                    />
+                    <Input
+                        label="Slug"
+                        placeholder="Enter slug"
+                        className="w-full"
+                        {...register("slug", { required: true })}
+                        onInput={(e) => {
+                            setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
+                        }}
+                    />
+                    <RTE
+                        label="Content"
+                        name="content"
+                        control={control}
+                        defaultValue={getValues("content")}
+                        className="w-full"
+                    />
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                    <Input
+                        label="Featured Image"
+                        type="file"
+                        accept="image/png, image/jpg, image/jpeg, image/gif"
+                        className="w-full"
+                        {...register("image", { required: !post })}
+                    />
+                    {post && (
+                        <div className="w-full">
+                            <img
+                                src={appwriteService.getFilePreview(post.featuredImage)}
+                                alt={post.title}
+                                className="rounded-lg shadow-sm"
+                            />
+                        </div>
+                    )}
+                    <Select
+                        options={["active", "inactive"]}
+                        label="Status"
+                        className="w-full"
+                        {...register("status", { required: true })}
+                    />
+                    <Button
+                        type="submit"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
+                    >
+                        {post ? "Update Post" : "Create Post"}
+                    </Button>
+                </div>
             </div>
         </form>
     );
