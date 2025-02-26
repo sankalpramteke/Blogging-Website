@@ -50,13 +50,18 @@ export default function PostForm({ post }) {
     };
 
     const slugTransform = useCallback((value) => {
-        if (value && typeof value === "string")
-            return value
+        if (value && typeof value === "string") {
+            let slug = value
                 .trim()
                 .toLowerCase()
                 .replace(/[^a-zA-Z\d\s]+/g, "-")
-                .replace(/\s/g, "-");
-
+                .replace(/\s/g, "-")
+                .replace(/^[^a-zA-Z\d]+/, "") // Remove special chars from start
+                .replace(/-+/g, "-"); // Replace multiple consecutive hyphens with single hyphen
+            
+            // Limit to 36 characters
+            return slug.slice(0, 36);
+        }
         return "";
     }, []);
 
